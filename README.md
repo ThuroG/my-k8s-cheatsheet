@@ -8,6 +8,10 @@
 - Get specific information from kubectl describe with grep ```k describe nodes node01 | grep Taints```
 -  Save existing Pod as YAML ```kubectl get pod webapp -o yaml >&nbsp;my-new-pod.yaml```
 - Run Pod with certain image and a command and save it as static pod ```kubectl run --restart=Never --image=busybox static-busybox --dry-run=client -o yaml --command -- sleep 1000 > /etc/kubernetes/manifests/static-busybox.yaml```
+- Show the latest events which happened on K8s ```kubectl get events -o wide```
+- Show enabled admission plugins ```kube-apiserver -h | grep enable-admission-plugins```
+- Usage of kubectl exec in kubeadm for admission plugins ```kubectl exec kube-apiserver-controlplane -n kube-system -- kube-apiserver -h | grep enable-admission-plugins```
+- Show the process of admission-plugins ```ps -ef | grep kube-apiserver | grep admission-plugins```
 
 
 # Important Kubernetes Documentation links
@@ -27,4 +31,9 @@
 -- https://kubernetes.io/docs/concepts/policy/resource-quotas/ 
 - https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/ 
 - (First check Kubelet.service if path is there pod-manifest, if not check the kubeconfig.yaml usually here: /var/lib/kubelet/config.yaml) https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/
-
+- Scheduler:
+-- https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/
+-- https://github.com/kubernetes/community/blob/master/contributors/devel/sig-scheduling/scheduling_code_hierarchy_overview.md
+-- https://kubernetes.io/blog/2017/03/advanced-scheduling-in-kubernetes/
+-- https://jvns.ca/blog/2017/07/27/how-does-the-kubernetes-scheduler-work/
+-- https://stackoverflow.com/questions/28857993/how-does-kubernetes-scheduler-work
