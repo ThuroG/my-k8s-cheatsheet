@@ -12,7 +12,8 @@
 - Show enabled admission plugins ```kube-apiserver -h | grep enable-admission-plugins```
 - Usage of kubectl exec in kubeadm for admission plugins ```kubectl exec kube-apiserver-controlplane -n kube-system -- kube-apiserver -h | grep enable-admission-plugins```
 - Show the process of admission-plugins ```ps -ef | grep kube-apiserver | grep admission-plugins```
-
+- Show most important metrics on node ```kubectl top node```
+- Show application logs from pod ```kubectl logs -f podname [containerName]```
 
 # Important Kubernetes Documentation links
 - https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/
@@ -37,3 +38,5 @@
 -- https://kubernetes.io/blog/2017/03/advanced-scheduling-in-kubernetes/
 -- https://jvns.ca/blog/2017/07/27/how-does-the-kubernetes-scheduler-work/
 -- https://stackoverflow.com/questions/28857993/how-does-kubernetes-scheduler-work
+- Create an own admission controller webhook: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/
+- Deployment, Rollout and Undo https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
