@@ -40,3 +40,5 @@
 -- https://stackoverflow.com/questions/28857993/how-does-kubernetes-scheduler-work
 - Create an own admission controller webhook: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/
 - Deployment, Rollout and Undo https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+- Run Args and Commands in a Pod: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
+- Configmaps and how to get values from it: https://kubernetes.io/docs/concepts/configuration/configmap/
