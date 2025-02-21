@@ -14,6 +14,11 @@
 - Show the process of admission-plugins ```ps -ef | grep kube-apiserver | grep admission-plugins```
 - Show most important metrics on node ```kubectl top node```
 - Show application logs from pod ```kubectl logs -f podname [containerName]```
+- Encode Secrets in Linux with base64 ```echo -n 'value' | base64```
+- Decode Secrets ```echo -n 'value' | base64 --decode```
+- Get a Shell to the container (in this example two containers) ```kubectl exec -it two-containers -c nginx-container -- /bin/bash```
+- Force recreation when editing fails ```kubectl replace --force -f /tmp/kubectl-edit-1234.yaml```
+
 
 # Important Kubernetes Documentation links
 - https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/
@@ -41,4 +46,14 @@
 - Create an own admission controller webhook: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/
 - Deployment, Rollout and Undo https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 - Run Args and Commands in a Pod: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
-- Configmaps and how to get values from it: https://kubernetes.io/docs/concepts/configuration/configmap/
+- Configmaps and how to get values from it: https://kubernetes.io/docs/concepts/configuration/configma:
+- Secrets: https://kubernetes.io/docs/concepts/configuration/secret/ 
+- Important: you need to define the secret type: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret_generic/ 
+- Encrypt data at Rest for Secrets: https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/ 
+- Secret Store CSI Driver: https://www.youtube.com/watch?v=MTnQW9MxnRI 
+- Distribute Secrets securely: https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/#define-container-environment-variables-using-secret-data
+- Multicontainer pod: https://kubernetes.io/docs/concepts/workloads/pods/#how-pods-manage-multiple-containers
+- Editing a pod to add sidecar container: https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/
+- Sidecar Containers (part of CKAD): https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
+- Init Containers: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+
