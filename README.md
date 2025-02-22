@@ -18,7 +18,7 @@
 - Decode Secrets ```echo -n 'value' | base64 --decode```
 - Get a Shell to the container (in this example two containers) ```kubectl exec -it two-containers -c nginx-container -- /bin/bash```
 - Force recreation when editing fails ```kubectl replace --force -f /tmp/kubectl-edit-1234.yaml```
-
+- Set horizontal pod autoscaler with imperative command ```kubectl autoscale deployment <name> --cpu-percent=50 --min=1 --max=10```
 
 # Important Kubernetes Documentation links
 - https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/
@@ -56,4 +56,4 @@
 - Editing a pod to add sidecar container: https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/
 - Sidecar Containers (part of CKAD): https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
 - Init Containers: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-
+- Autoscaling: https://kubernetes.io/docs/concepts/workloads/autoscaling/ 
