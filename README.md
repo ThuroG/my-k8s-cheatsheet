@@ -1,7 +1,9 @@
 # my-k8s-cheatsheet
  This Cheatsheet servers the purpose to support Arthur Gassmann by the most important cmds and tricks for K8s tasks 
 
-# Kubectl cmds
+It is structured by the Certifications
+
+# CKA Kubectl cmds
 
 - Set alias for kubectl 
 ```alias k=kubectl```
@@ -19,8 +21,17 @@
 - Get a Shell to the container (in this example two containers) ```kubectl exec -it two-containers -c nginx-container -- /bin/bash```
 - Force recreation when editing fails ```kubectl replace --force -f /tmp/kubectl-edit-1234.yaml```
 - Set horizontal pod autoscaler with imperative command ```kubectl autoscale deployment <name> --cpu-percent=50 --min=1 --max=10```
+- Drain all the pods running on a node and ignore daemonset ```kubectl drain node-01 --ignore-daemonsets```
+- Make a node unschedulable but do not drain existing running pods ```kubectl cordon node01```
+- Make a node schedulable again (usually after an upgrade) ```kubectl uncordon node01```
+- Check the release of the OS ```cat /etc/*release* ```
+- Before Cluster Update for Kubeadm, check the Package Distribution List and adapt the number ```vim /etc/apt/sources.list.d/kubernetes.list```
 
-# Important Kubernetes Documentation links
+# CKA Important Kubernetes Documentation links
+- Kubernetes API & Architecture
+-- https://kubernetes.io/docs/concepts/overview/kubernetes-api/
+-- https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md
+-- https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api_changes.md
 - https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/
 - https://kubernetes.io/docs/reference/kubectl/generated/kubectl_label/
 - https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
@@ -57,3 +68,5 @@
 - Sidecar Containers (part of CKAD): https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
 - Init Containers: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
 - Autoscaling: https://kubernetes.io/docs/concepts/workloads/autoscaling/ 
+- Using Kubeadm for upgrade cluster: https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
+- Changing the Package Distribution Version has to be done BEFORE: https://v1-31.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/change-package-repository/ 
