@@ -26,6 +26,8 @@ It is structured by the Certifications
 - Make a node schedulable again (usually after an upgrade) ```kubectl uncordon node01```
 - Check the release of the OS ```cat /etc/*release* ```
 - Before Cluster Update for Kubeadm, check the Package Distribution List and adapt the number ```vim /etc/apt/sources.list.d/kubernetes.list```
+- Backup all K8s Objects in a declarative yaml ```kubectl get all --all-namespaces -o yaml > all.yaml```
+- 
 
 # CKA Important Kubernetes Documentation links
 - Kubernetes API & Architecture
@@ -70,3 +72,6 @@ It is structured by the Certifications
 - Autoscaling: https://kubernetes.io/docs/concepts/workloads/autoscaling/ 
 - Using Kubeadm for upgrade cluster: https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
 - Changing the Package Distribution Version has to be done BEFORE: https://v1-31.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/change-package-repository/ 
+- Backup ETCD https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster
+- ETCD Github Recovery Section: https://github.com/etcd-io/website/blob/main/content/en/docs/v3.5/op-guide/recovery.md
+- Disaster Recovery for Kubernetes: https://www.youtube.com/watch?v=qRPNuT080Hk
