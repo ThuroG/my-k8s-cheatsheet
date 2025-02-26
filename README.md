@@ -27,7 +27,8 @@ It is structured by the Certifications
 - Check the release of the OS ```cat /etc/*release* ```
 - Before Cluster Update for Kubeadm, check the Package Distribution List and adapt the number ```vim /etc/apt/sources.list.d/kubernetes.list```
 - Backup all K8s Objects in a declarative yaml ```kubectl get all --all-namespaces -o yaml > all.yaml```
-- 
+- Inspect Service Logs ```journalctl -u etcd.service -l```
+- If pods are down - go to docker and use ```docker ps aux --> docker logs <containerid>```
 
 # CKA Important Kubernetes Documentation links
 - Kubernetes API & Architecture
@@ -75,3 +76,21 @@ It is structured by the Certifications
 - Backup ETCD https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster
 - ETCD Github Recovery Section: https://github.com/etcd-io/website/blob/main/content/en/docs/v3.5/op-guide/recovery.md
 - Disaster Recovery for Kubernetes: https://www.youtube.com/watch?v=qRPNuT080Hk
+- Kubernetes Certificate Health Check Spreadsheet: https://github.com/mmumshad/kubernetes-the-hard-way/tree/master/tools
+- Managing TLS in Kubernetes: https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/ 
+- Certificate Signing Request k8s object Creation: https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/#create-a-certificatesigningrequest-object-to-send-to-the-kubernetes-api
+- Theory about Certificate Signing Request: https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/
+
+# Security specific Notes
+- SSL CA Certification Generation
+-- Key Generation for CA: ```openssl genrsa -out ca.key 2048```
+-- CA Signing Request ```openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr```
+-- Signing CA ```openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt```
+SSL Admin Certiciation Generation
+-- Key generation for admin ```openssl genrsa -out admin.key 2048```
+-- Signing Request (don't forget to add the group) ```openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters" -out admin.csr```
+-- Signing Admin Certificate with CA ```openssl x509 -req -in admin.csr -CA ca.csr -CAKey ca.key -out admin.crt```
+- SSL Server Certificates for ETCD will be created the same way but need to be added to the etcd config. If there are peer clients, this also has to be mentioned
+- Kubeapi server needs to have ALL DNS in the certificate incl. the IP Addresses in an openssl.cnf file where the DNS are listed
+- Kubelet Server Certification has to be created for each node and with its node name. It has to be added to the kubelet.config then
+- Decode SSL Certificates for Verification: ```openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout```
