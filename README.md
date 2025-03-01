@@ -29,6 +29,14 @@ It is structured by the Certifications
 - Backup all K8s Objects in a declarative yaml ```kubectl get all --all-namespaces -o yaml > all.yaml```
 - Inspect Service Logs ```journalctl -u etcd.service -l```
 - If pods are down - go to docker and use ```docker ps aux --> docker logs <containerid>```
+- Context allows to switch easily between clusters and with the correct user ```kubectl use-context <context-name>```
+- Use Context from another Konfigfile ```kubectl config use-context research --kubeconfig /path/to/ext-kube-config-file```
+- Add Kubeconfig to ./bashrc file as env variable = ```vi ~/.bashrc --> export KUBECONFIG=/root/my-kube-config --> source ~/.bashrc```
+- Show local API Groups ```curl http://localhost:6443 -k```
+- Show the resource in API Groups ``` curl http://localhost:6443/apis -k | grep "name"```
+- Check namespaced API Groups ```kubectl api-resources --namespaced=true```
+- Check clusterscoped API Groups ```kubectl api-resources --namespaced=false```
+- Example of line counts for kubectl output (-1 since header will also be count) ```k get clusterroles | wc -l```
 
 # CKA Important Kubernetes Documentation links
 - Kubernetes API & Architecture
@@ -80,6 +88,12 @@ It is structured by the Certifications
 - Managing TLS in Kubernetes: https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/ 
 - Certificate Signing Request k8s object Creation: https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/#create-a-certificatesigningrequest-object-to-send-to-the-kubernetes-api
 - Theory about Certificate Signing Request: https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/
+- Set KubeConfigs correctly: https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/
+- Merging KubeConfigs: https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/
+- API Groups: https://kubernetes.io/docs/reference/using-api/ 
+- Set Kubectl Proxy in order to communicate with the API Groups: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_proxy/
+- Use Rolebased Access Control: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+- Check if user can perform certain actions (Can-I): https://kubernetes.io/docs/reference/kubectl/generated/kubectl_auth/kubectl_auth_can-i/ 
 
 # Security specific Notes
 - SSL CA Certification Generation
