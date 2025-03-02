@@ -37,8 +37,17 @@ It is structured by the Certifications
 - Check namespaced API Groups ```kubectl api-resources --namespaced=true```
 - Check clusterscoped API Groups ```kubectl api-resources --namespaced=false```
 - Example of line counts for kubectl output (-1 since header will also be count) ```k get clusterroles | wc -l```
+- Check Kubernetes secret (token) in a pod since it is mounted: ```kubectl exec -it <podname> -- cat /var/run/secrets/kubernetes.io/serviceaccount/token```
+- Decode Token with jq ```jq -R 'split(".") | select(length > 0) | .[0],.[1] | @base64d | fromjson' <<< <token>```
+- Kubectl get pods in yaml output ```kubectl get po -o yaml```
+- Set Service account for a deployment ```kubectl set serviceaccount deployment nginx-deployment serviceaccount1```
+- Checkout Linux Capabilities on the host (or in the docker container) ```cat /usr/include/linux/capability.h```
+- Add capabilities for docker run if not given ```docker run --cap-add MAC_ADMIN ubuntu```
+- Drop capabilities ```docker run --cap-drop KILL ubuntu```
+- Or use privileged flag to use all capabilities ```docker run --privileged ubuntu```
 
 # CKA Important Kubernetes Documentation links
+
 - Kubernetes API & Architecture
 -- https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 -- https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md
@@ -94,8 +103,14 @@ It is structured by the Certifications
 - Set Kubectl Proxy in order to communicate with the API Groups: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_proxy/
 - Use Rolebased Access Control: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
 - Check if user can perform certain actions (Can-I): https://kubernetes.io/docs/reference/kubectl/generated/kubectl_auth/kubectl_auth_can-i/ 
+- Serviceaccounts in K8s: https://kubernetes.io/docs/concepts/security/service-accounts/ 
+- Configure Pod to use ServiceAccount: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+- Set Serviceaccount for a running k8s deployment object: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_set/kubectl_set_serviceaccount/
+- Use a private registry for kubernetes images: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+- Securing Pods with SecurityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+- Pod Security Standards: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 
-# Security specific Notes
+# SSL Certificate specific Notes
 - SSL CA Certification Generation
 -- Key Generation for CA: ```openssl genrsa -out ca.key 2048```
 -- CA Signing Request ```openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr```
