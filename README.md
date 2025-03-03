@@ -109,6 +109,17 @@ It is structured by the Certifications
 - Use a private registry for kubernetes images: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 - Securing Pods with SecurityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 - Pod Security Standards: https://kubernetes.io/docs/concepts/security/pod-security-standards/
+- Use Network Policies: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+- Kubectx Tool to switch easily between contexts (kubectx cmd) and namespaces (kubens cmd): https://github.com/ahmetb/kubectx
+
+
+# CustomResourceDefinition
+- Create CustomResourceDefinition: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
+- More info about CRD: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
+- Sample Controller based on GoLang: https://github.com/kubernetes/sample-controller
+- Use a K8s Operator to combine CRD and Controller: https://kubernetes.io/docs/concepts/extend-kubernetes/operator/
+- Awesome Operators: https://github.com/operator-framework/awesome-operators 
+- Check Operator Hub: https://operatorhub.io/ 
 
 # SSL Certificate specific Notes
 - SSL CA Certification Generation
