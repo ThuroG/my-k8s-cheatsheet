@@ -45,7 +45,7 @@ It is structured by the Certifications
 - Add capabilities for docker run if not given ```docker run --cap-add MAC_ADMIN ubuntu```
 - Drop capabilities ```docker run --cap-drop KILL ubuntu```
 - Or use privileged flag to use all capabilities ```docker run --privileged ubuntu```
-
+- Cat log from a running pod ```kubectl exec webapp -- cat /log/app.log```
 # CKA Important Kubernetes Documentation links
 
 - Kubernetes API & Architecture
@@ -111,7 +111,12 @@ It is structured by the Certifications
 - Pod Security Standards: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 - Use Network Policies: https://kubernetes.io/docs/concepts/services-networking/network-policies/
 - Kubectx Tool to switch easily between contexts (kubectx cmd) and namespaces (kubens cmd): https://github.com/ahmetb/kubectx
-
+- Volumes: https://kubernetes.io/docs/concepts/storage/volumes/
+- Configure a pod  to use a volume as storage: https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/
+- Use PersistentVolumes as Storage: https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
+- PersistentVolumes: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+- Difference between Volumes and PersistentVolumes (Volume is storage within the Pod while PV is outside and needs to be claimed): https://stackoverflow.com/questions/51420621/what-is-the-difference-between-a-volume-and-persistent-volume
+- Persistent Volumes - Claim as volumes: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#claims-as-volumes%5C
 
 # CustomResourceDefinition
 - Create CustomResourceDefinition: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
@@ -134,3 +139,22 @@ SSL Admin Certiciation Generation
 - Kubeapi server needs to have ALL DNS in the certificate incl. the IP Addresses in an openssl.cnf file where the DNS are listed
 - Kubelet Server Certification has to be created for each node and with its node name. It has to be added to the kubelet.config then
 - Decode SSL Certificates for Verification: ```openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout```
+
+# Example of claiming Pod to PVC
+```
+apiVersion: v1
+kind: Pod
+metadata:
+ name: mypod
+spec:
+ containers:
+  - name: myfrontend
+   image: nginx
+   volumeMounts:
+   - mountPath: "/var/www/html"
+    name: mypd
+ volumes:
+  - name: mypd
+   persistentVolumeClaim:
+    claimName: myclaim
+```
