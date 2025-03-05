@@ -46,6 +46,8 @@ It is structured by the Certifications
 - Drop capabilities ```docker run --cap-drop KILL ubuntu```
 - Or use privileged flag to use all capabilities ```docker run --privileged ubuntu```
 - Cat log from a running pod ```kubectl exec webapp -- cat /log/app.log```
+
+
 # CKA Important Kubernetes Documentation links
 
 - Kubernetes API & Architecture
@@ -117,6 +119,7 @@ It is structured by the Certifications
 - PersistentVolumes: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 - Difference between Volumes and PersistentVolumes (Volume is storage within the Pod while PV is outside and needs to be claimed): https://stackoverflow.com/questions/51420621/what-is-the-difference-between-a-volume-and-persistent-volume
 - Persistent Volumes - Claim as volumes: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#claims-as-volumes%5C
+- Storage Class: https://kubernetes.io/docs/concepts/storage/storage-classes/
 
 # CustomResourceDefinition
 - Create CustomResourceDefinition: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
