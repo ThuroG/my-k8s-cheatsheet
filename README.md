@@ -161,3 +161,15 @@ spec:
    persistentVolumeClaim:
     claimName: myclaim
 ```
+
+
+# Networking Basics
+- Display link layer or activate a network interface ```ip link show```
+- Assign Ip address to the client: ```ip addr add 192.168.1.10/24 dev eth0```
+- Display routing table and gateways ```route```
+- Add gateway to client (has to be done on every machines who wants to communicate) ```ip route add 192.168.2.0/24 via 192.168.1.1```
+- Connect to internet
+-- Add gateway to internet ```ip route add 172.217.194.0/24 via 192.168.1.1```
+-- Make it the default route gateway ```ip route add default via 192.168.2.1```
+- Linux does not forward packages by default. It is set to 0 in. If set to 1 it will be forwarded ```cat /proc/sys/net/ipv4/ip_forward```& ```/etc/sysctl.conf --> net.ipv4.ip_forward```
+- 
