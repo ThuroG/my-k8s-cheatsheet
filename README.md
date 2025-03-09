@@ -172,4 +172,57 @@ spec:
 -- Add gateway to internet ```ip route add 172.217.194.0/24 via 192.168.1.1```
 -- Make it the default route gateway ```ip route add default via 192.168.2.1```
 - Linux does not forward packages by default. It is set to 0 in. If set to 1 it will be forwarded ```cat /proc/sys/net/ipv4/ip_forward```& ```/etc/sysctl.conf --> net.ipv4.ip_forward```
-- 
+- set DNS for an IP address in etc/hosts (any name can be there and it is highest priority)```cat >> /etc/hosts```
+- Use DNS Server to look it up in the resolve.conf ```/etc/resolve.conf nameserver <ipaddress>```
+- If there are two same entries, the etc/host will be prioritized. It can be changed in ```cat /etc/nsswitch.conf hosts: files dns```
+- Forward All to 8.8.8.8 for unknown
+- Make an entry for search in /etc/resolv.conf ```search mycompany.com prod.mycompany.com```
+- nslookup to check cname (it is not looking the local /etc/hosts) ```nslookup <hostname or ipaddress>```
+- dig - similar but gives back more information
+- K8s Documentation how networking works there: https://github.com/kubernetes/dns/blob/master/docs/specification.md
+- Setting up Coredns as DNS Server: https://coredns.io/plugins/kubernetes/
+- Create a network namespace (in this example red) on linux with ```ip netns add red```
+- List network ns ```ip netns```
+- Run command in ns with ```ip netns exec red  ip link``` is similar to ```ip -n red link```
+- Link two ns is similar as link two pcs but it needs ```veth-<ns>``` as argument.
+-- First you need create a link in the namespace(it represents the cable in the real world and give it the name where it shoulds connect: here it is veth-blue) ```ip link add veth-red type veth peer name veth-blue```
+-- Second you need to attach it and bind it```ip link set veth-red netns red``` && ```ip link set veth-red netns blue```
+- Create a switch so that you have a virtual private network with Linux Bridge (here it is called v-net-0) ```ip link add v-net-0 type bridge```
+- Delete a connection with ```ip -n red link del veth-red```
+- Make sure that the bridge also gets a ip address ```ip addr add 192.168.15.5/24 dev v-net-0```
+Route external traffic out of the VPN with ```ip netns exec blue ip route add 192.168.1.0/24 via 192.168.15.5```
+- You also need to enable NAT so that the outwork network can communicate with the VPN: ```iptables -t nat -A POSTROUTING -s 192.168.15.0/24 -j MASQUERADE``` --> it makes sure that traffic is seen as from the local host and not something unknown
+- Show the network routes with ```ip netns exec blue route```
+- add a Default gateway to forward traffic ```ip netns exec blue ip route add default via 192.168.15.5```here it has to be set in every ns so that it forwards the traffic to the default gateway (which is 192.168.15.5)
+- add a Port forwarding role ```iptables -t nat -A PREROUTING --dport 80 --to-destination 192.168.15.2:80 -j DNAT```
+- If you cannot ping from one ns to the other, make sure that NETMASK is set for the IPAddress.
+- Alternatively, you could check the FirewallID/IP Table rules. Add rules to IP Tables to allow traffict from one ns to another.
+- Show only the connection bridge: ```ip link show eth0```
+- Show the default gateway route ```ip route show default```
+- Use netstat to list all used ports by (k8s) services ```netstat -nplt```
+- Check which port has how many client connections open: ```netstat -anp | grep etcd```
+- run docker container with a NONE network ```docker run --network NONE nginx```
+- run docker container with a port like the host ```docker run --network nging```
+- use a bridge (preferred) - which is created by default (check ```docker network ls```)
+- Whenever we create a container, a ns is created (check ```ip netns```)
+- It automatically creates a bridge cable (check with ```ip -n <ns of docker> addr```)
+- Show all IP addresses configured ```ip a```or ```ip link```
+- You need port mapping so that you can bind inner port to an outer port with ```docker run -p 8080:80 nginx```
+- CNI = Container network interface which is the standardization for bridge network. (bridge program)
+- CNI defines how the plugin should be developed for example
+-- Container Runtime must create network namespace
+-- Identify network the container must attach to
+-- Must support command line arguments ADD/DEL/CHECK
+- Bridge comes in with already available plugins such as VLAN, IPVLAN
+- Docker does not follow that standard but you could link it to a CNI bridge with crating first the docker with a NONE nework and then run the ```bridge add <container ns id> /var/run/nets/<container ns id>```
+-- This is also how K8s does it (that's why they say they did not "support Docker" anymore)
+- K8s has also its rules and uses bridges and predefined ports which are used by kubernetes object such as:
+-- kube-api = 6443
+-- kubelet = 10250
+-- kube-scheduler = 10259
+-- kube-controller-manager = 10257
+-- etcd = 2379
+-- Services port range on worker nodes (30000 - 32767)
+- Check required ports documentation for troubleshooting: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#check-required-ports
+- Kubernetes Network plugins: https://kubernetes.io/docs/concepts/cluster-administration/addons/
+- How to implement k8s networking model: https://kubernetes.io/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model
