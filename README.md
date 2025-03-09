@@ -226,3 +226,20 @@ Route external traffic out of the VPN with ```ip netns exec blue ip route add 19
 - Check required ports documentation for troubleshooting: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#check-required-ports
 - Kubernetes Network plugins: https://kubernetes.io/docs/concepts/cluster-administration/addons/
 - How to implement k8s networking model: https://kubernetes.io/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model
+- Every POD should have an IP Address
+- Evey POD should be able to communicate with every other POD in the same node and on other nodes without NAT
+- Container Runtime looks over /etc/cni/net.d/net-script.conflist and checks which comd to run from /opt/cni/bin/net-script.sh. For example ```./net-script.sh add <container> <namespace>```
+- Container Network installed in ```/opt/cni/bin```
+- Container runtime (which is responsible for  running a container) is installed in ```/etc/cni/net.d```
+- Weave released a new CNI installation link: https://www.weave.works/blog/weave-cloud-end-of-service
+- Weave install Cmnd```kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml```
+- Weave Reference links: https://www.weave.works/docs/net/latest/kubernetes/kube-addon/#-installation
+- https://github.com/weaveworks/weave/releases
+- Weave is installed on each node with a Daemon Set and should be used for Troubleshooting if there are problems with the traffic
+- Get the configured container runtime endpoint from KUBELET: ```ps -aux | grep kubelet | grep --color container-runtime-endpoint```
+- IP address management (IPAM) has to be configured in ```/etc/cni/net.d/net-script.conf```
+- Show default cluster ip range ```kube-api-server --service-cluster-ip-range ipNet ```
+- Shwo default cluster ip range ```ps aux | grep kube-api-server```
+- Show assigned ip of services in iptables ```iptables -L -t nat | grep db-service```
+- Check also log of kube-proxy to see what configuration it has such as proxy type ```kubectl logs -n kube-system pod/kube-proxy-5df7v```
+- Inspect the setting on kube-api server by running on command ```cat /etc/kubernetes/manifests/kube-apiserver.yaml   | grep cluster-ip-range```
