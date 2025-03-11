@@ -120,6 +120,7 @@ It is structured by the Certifications
 - Difference between Volumes and PersistentVolumes (Volume is storage within the Pod while PV is outside and needs to be claimed): https://stackoverflow.com/questions/51420621/what-is-the-difference-between-a-volume-and-persistent-volume
 - Persistent Volumes - Claim as volumes: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#claims-as-volumes%5C
 - Storage Class: https://kubernetes.io/docs/concepts/storage/storage-classes/
+- Run a shell in a container: https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/ 
 
 # CustomResourceDefinition
 - Create CustomResourceDefinition: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
@@ -161,6 +162,53 @@ spec:
    persistentVolumeClaim:
     claimName: myclaim
 ```
+# Ingress Controller
+- Use to create paths and redirection for the DNS Host
+- Use one of the following tools for Ingress Controller as K8s does not have an in house solution: Nginx, HAProxy, Istio or Traefik
+- Based on the chosen technology, create Ingress Resources (k8s objects)
+- Check documentation of k8s: https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/
+- Nginx Ingress Controller documentation: https://docs.nginx.com/nginx-ingress-controller/ 
+- Imperative way to create ingress resource ```kubectl create ingress ingress-test --rule="wear.my-online-store.com/wear*=wear-service:80"**```
+- Kubectl create ingress documentation: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-ingress-em-  
+- Ingress documentation: https://kubernetes.io/docs/concepts/services-networking/ingress
+- Path types documentation: https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types
+- Example of reWriting the URL Path: ```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+  namespace: critical-space
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /pay
+        backend:
+          serviceName: pay-service
+          servicePort: 8282
+ ```
+ - Another example of rewriting the target:```
+ apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: rewrite
+  namespace: default
+spec:
+  rules:
+  - host: rewrite.bar.com
+    http:
+      paths:
+      - backend:
+          serviceName: http-svc
+          servicePort: 80
+        path: /something(/|$)(.*)
+        ```
+- Rewrite Target Nginx documentation: https://kubernetes.github.io/ingress-nginx/examples/rewrite/
+- It is better to use Gateway as it is a kubernetes native object and will solve Ingress in future (also for UDP, GRPC etc.): https://kubernetes.io/docs/concepts/services-networking/gateway/
 
 
 # Networking Basics
@@ -243,3 +291,9 @@ Route external traffic out of the VPN with ```ip netns exec blue ip route add 19
 - Show assigned ip of services in iptables ```iptables -L -t nat | grep db-service```
 - Check also log of kube-proxy to see what configuration it has such as proxy type ```kubectl logs -n kube-system pod/kube-proxy-5df7v```
 - Inspect the setting on kube-api server by running on command ```cat /etc/kubernetes/manifests/kube-apiserver.yaml   | grep cluster-ip-range```
+- In Kubernetes, if you want to access a pod within the same namespace you can just point to the service name ```https://web-service```
+- If you need to access a service from a different namespace you can access it via ```https://web-service.namespace.svc.cluster.local```
+- Normally, Kubernetes does not create DNS entries for pod but you can explicit create it but it uses tha IP address (it replaces the dots to dashes. Ex: 10-240-12-0)
+- Every time a pod or service is created, it saves an entry in CoreDNS. Normally called kube-dns in K8s
+- CoreDNS is saved in /etc/coredns/Corefile and is also placed as configmap ```kubectl get configmap -n kube-system```
+
