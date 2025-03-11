@@ -209,6 +209,7 @@ spec:
         ```
 - Rewrite Target Nginx documentation: https://kubernetes.github.io/ingress-nginx/examples/rewrite/
 - It is better to use Gateway as it is a kubernetes native object and will solve Ingress in future (also for UDP, GRPC etc.): https://kubernetes.io/docs/concepts/services-networking/gateway/
+- Gateway k8s documentation: https://gateway-api.sigs.k8s.io/ 
 
 
 # Networking Basics
