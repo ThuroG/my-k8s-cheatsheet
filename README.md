@@ -46,7 +46,8 @@ It is structured by the Certifications
 - Drop capabilities ```docker run --cap-drop KILL ubuntu```
 - Or use privileged flag to use all capabilities ```docker run --privileged ubuntu```
 - Cat log from a running pod ```kubectl exec webapp -- cat /log/app.log```
-
+- ETCDCTL Version set default to 2. Use 3 ```export ETCDCTL_API=3```
+- Get all keys from ETCDCTL ```etcdctl get / --prefix --keys-only```
 
 # CKA Important Kubernetes Documentation links
 
@@ -121,6 +122,10 @@ It is structured by the Certifications
 - Persistent Volumes - Claim as volumes: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#claims-as-volumes%5C
 - Storage Class: https://kubernetes.io/docs/concepts/storage/storage-classes/
 - Run a shell in a container: https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/ 
+- High Availability Cluster in K8s (have a odd number of nodes): https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability
+- Running in multiple zones: https://kubernetes.io/docs/setup/best-practices/multiple-zones/
+- Installing K8s the hard way: https://www.youtube.com/watch?v=uUupRagM7m0&list=PL2We04F3Y_41jYdadX55fdJplDvgNGENo
+- and its github repository: https://github.com/mmumshad/kubernetes-the-hard-way
 
 # CustomResourceDefinition
 - Create CustomResourceDefinition: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
