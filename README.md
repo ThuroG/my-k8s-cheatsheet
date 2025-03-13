@@ -194,7 +194,9 @@ spec:
           serviceName: pay-service
           servicePort: 8282
  ```
- - Another example of rewriting the target:```
+
+ - Another example of rewriting the target:
+ ```
  apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -303,3 +305,66 @@ Route external traffic out of the VPN with ```ip netns exec blue ip route add 19
 - Every time a pod or service is created, it saves an entry in CoreDNS. Normally called kube-dns in K8s
 - CoreDNS is saved in /etc/coredns/Corefile and is also placed as configmap ```kubectl get configmap -n kube-system```
 
+# Install the kubeadmin way
+
+1. Make sure you have enabled bridge-nf-call on all nodes  (containerd config)```
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+
+sudo sysctl --system
+```
+2. Check if the container runtime (usually containerd) is installed
+3. Install kubeadm, kubectl and kubelet on all nodes: 
+```
+sudo apt-get update
+
+sudo apt-get install -y apt-transport-https ca-certificates curl
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+sudo apt-get update
+
+# To see the new version labels
+sudo apt-cache madison kubeadm
+
+sudo apt-get install -y kubelet=1.32.0-1.1 kubeadm=1.32.0-1.1 kubectl=1.32.0-1.1
+
+sudo apt-mark hold kubelet kubeadm kubectl
+```
+
+4. Install the Cgroup driver
+5. Initialize kubeadm with the correct arguments ```
+IP_ADDR=$(ip addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+kubeadm init --apiserver-cert-extra-sans=controlplane --apiserver-advertise-address $IP_ADDR --pod-network-cidr=172.17.0.0/16 --service-cidr=172.20.0.0/16
+```
+6. Use this troubleshoot page for help: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/
+7. Use the kubeadm init join command which was displayed to join worker nodes to the cluster: ``
+kubeadm join 192.168.122.129:6443 --token vterm2.q3fvhymiwpd3rrfq \
+        --discovery-token-ca-cert-hash sha256:9af7f2691df74b5d29272c1e2bc49ee34df0efdb006fc1669f8dc68250518e43
+```
+8.1 Download a network plugin like flannel and install it: ```curl -LO https://raw.githubusercontent.com/flannel-io/flannel/v0.20.2/Documentation/kube-flannel.yml```
+8.2 Open kube-flannel-yml
+8.3 change the config ```
+net-conf.json: |
+    {
+      "Network": "10.244.0.0/16", # Update this to match the custom PodCIDR
+      "Backend": {
+        "Type": "vxlan"
+      }
+      ```
+8.4 Locate the args section within the kube-flannel container to add the iface: ```
+  args:
+  - --ip-masq
+  - --kube-subnet-mgr
+  - - --iface=eth0 # this has to be added
+  ```
+8.5 apply the modified manifest: ``` kubectl apply -f kube-flannel.yml ```
+8.6 Check the status of the both the nodes: ```kubectl get nodes```
