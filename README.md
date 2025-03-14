@@ -368,3 +368,9 @@ net-conf.json: |
   ```
 8.5 apply the modified manifest: ``` kubectl apply -f kube-flannel.yml ```
 8.6 Check the status of the both the nodes: ```kubectl get nodes```
+
+# Helm
+- Packaging Manager for Kubernetes: https://helm.sh/
+- Cheatsheet for Helm: https://helm.sh/docs/intro/cheatsheet/
+- Public registry for Helm packages: https://artifacthub.io/
+- Helm uses releases so that you can manage it better. Check out ```helm list```
