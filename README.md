@@ -374,3 +374,31 @@ net-conf.json: |
 - Cheatsheet for Helm: https://helm.sh/docs/intro/cheatsheet/
 - Public registry for Helm packages: https://artifacthub.io/
 - Helm uses releases so that you can manage it better. Check out ```helm list```
+
+# Kustomize
+- Disclaimer: Kustomize has a very shitty documentation
+- Overlaying Kubernetes configurations for different env. Can be used with Kubectl: https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/
+- Is Kubernetes native and comes in place. However, installation is still advised: https://kubectl.docs.kubernetes.io/installation/kustomize/binaries/
+- Kustomize build with ```kustomize build``` will not deploy the application. It first generates the final configuration and then needs to be applied with ```kubectl apply```
+- Here is an example how the cmd looks like. Mind that "k8s/" is a directory ```kustomize build k8s/ | kubectl apply -f -```
+- You can also run two cmds seperately and since kustomize create a folder with the generated final configuation you have to use following command (-k for kustomize directory)```kubectl apply -k k8s/```
+- Hardcode the apiVersion as it protects from breaking changes
+- Create logical structure of directories and put in every directory a kustomization.yaml file. It makes it easier to manage the application.
+- Kustomize can be used to transform big amounts of yaml with attributes such as commonLabels or set namespaces: https://github.com/kubernetes-sigs/kustomize/blob/master/examples/transformerconfigs/README.md
+- Note to me: This can be useful for Deploying multiple software for different customers
+- Images can also be used as Kustomize Transformer to change either the whole image in all the resources or the version: https://github.com/kubernetes-sigs/kustomize/blob/master/examples/transformerconfigs/README.md#images-transformer
+- Patches are similar concept like transformer in Kustomize but target a specific field while transformers apply genericFields such as image or labels: https://kubectl.docs.kubernetes.io/references/kustomize/glossary/#patch
+- Patches have operation types such as add, remove, replace. There are more based on the way you want to use patches.
+- One way is Strategic Merge patches: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-api-machinery/strategic-merge-patch.md
+The other way is JsonPatch: https://github.com/kubernetes-sigs/kustomize/blob/master/examples/jsonpatch.md
+- You can use Patches either inline (in the same kustomization.yaml) or in a seperate file which has to be mentioned in kustomization.yaml: ```
+patches:
+  - path: /file/to/patch.yaml
+  ```
+- Check also here for different use cases: https://kubectl.docs.kubernetes.io/references/kustomize/builtins/#usage-via-transformers-field-5 
+- In a stratetic merge patch - If you want to delete a value you have to set it to ```null```
+- In a json patch - if you want to replace a list / dictionary item you have to specify the path with the index. Like ```path: /spec/template/spec/containers/0``` --> here the 0 means the first item. You can then set the whole value in the yaml format
+- In a json patch - if you want to add something to the list then you have to use a "-" in the path like ```path: /spec/template/spec/containers/-```
+- Overlays is just using patches in order to change specific values from the base directory: https://devopscube.com/kustomize-tutorial/
+- Here is the KodeKloud Overlay Notes: https://notes.kodekloud.com/docs/CKA-Certification-Course-Certified-Kubernetes-Administrator/2025-Updates-Kustomize-Basics/Overlays 
+- Components: https://notes.kodekloud.com/docs/CKA-Certification-Course-Certified-Kubernetes-Administrator/2025-Updates-Kustomize-Basics/Components
