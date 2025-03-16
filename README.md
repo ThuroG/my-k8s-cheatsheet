@@ -402,3 +402,35 @@ patches:
 - Overlays is just using patches in order to change specific values from the base directory: https://devopscube.com/kustomize-tutorial/
 - Here is the KodeKloud Overlay Notes: https://notes.kodekloud.com/docs/CKA-Certification-Course-Certified-Kubernetes-Administrator/2025-Updates-Kustomize-Basics/Overlays 
 - Components: https://notes.kodekloud.com/docs/CKA-Certification-Course-Certified-Kubernetes-Administrator/2025-Updates-Kustomize-Basics/Components
+
+# Troubleshooting
+## A. Application Failure
+- A.0 Check the official documentation of Troubleshooting Applications: https://kubernetes.io/docs/tasks/debug/debug-application/
+- A.1 Check all components where the failure may occur. Start with the end user perspective and troubleshoot with a curl cmd ```curl http://web-service-ip:node-port```
+- A.2 Describe teh service to see if the IP address has been assigned ```kubectl describe service web-service```
+- A.3 If not - Check also if the label / selector has been assigned to the correct pod
+- A.2 Check the pod itself if it is Status RUNNING ```kubectl get pod```
+- A.3 Check the describe cmd of the pod ```kubectl describe pod web```
+- A.4 Check the logs of the pod ```kubectl logs web```
+- A.5 Make sure to check all passwords / user settings if given or if a servce is correct bound such as Service Account
+ ## B. Control Plane & Node Failure
+- B.0: Check the official documentation of Troubleshooting Cluster: https://kubernetes.io/docs/tasks/debug/debug-cluster/
+- B.1: Check first the status of the nodes: ```kubectl get nodes```
+- B.2: Check the pods if they are running: ```kubectl get pods```
+- B.3: Check if the pods in the kube-system namespace are running: ```kubectl get pods -n kube-system``` 
+- B.4: Check the status of the Kubeapi-server Service on the controlplane node: ```service kube-apiserver status```
+- B.5: Check the status of the Kube-controller-manager Service on the controlplane node: ```service kube-controller-manager status```
+- B.6: Check the status of the Kube-scheduler Service on the controlplane node: ```service kube-scheduler status```
+- B.7: Check the status of the Kubelet Service on the **worker** node: ```ssh node01 / service kubelet status```
+- B.8: Check the status of the Kube-Proxy Service on the **worker** node: ```ssh node01 / service kube-proxy status```
+- B.9: Check the logs either on the pods when installed with Kubeadm: ```kubectl logs kube-apiserver-master -n kube-system``` or if installed native with a log tool such as journalctl: ```sudo journalctl -u kube-apiserver```
+## C. Worker Nodes Failure
+- C.1: Check first the status of the nodes: ```kubectl get nodes```
+- C.2: If not ready - check the node description and the status of each component: ```kubectl describe node node01```
+- C.3: If statuses show UNKNOWN - that means that the Worker Node can't communicate to the Master Node. Could be a possible loss of a node
+- C.4: Check the last heartbeat timefield of the worker node
+- C.5: Check the processes running: ```top```
+- C.6: Check the diskspace: ```df -h```
+- C.7: Check the kubelet service: ```service kubelet status```
+- C.8: Check the kubelet logs: ```sudo journalctl -u kubelet```
+- C.9: Check the certificates if they are part of the right group (O Organization) and from the right CA or are not expired
