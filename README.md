@@ -434,7 +434,7 @@ patches:
 - C.7: Check the kubelet service: ```service kubelet status```
 - C.8: Check the kubelet logs: ```sudo journalctl -u kubelet```
 - C.9: Check the Kubelet config file which is here: ```/var/lib/kubelet/config.yaml```
-- C.9: Check the certificates if they are part of the right group (O Organization) and from the right CA or are not expired
+- C.9: Check the certificates if they are part of the right group (O Organization) and from the right CA or are not expired ```openssl x509 -in /var/lib/kubelet/worker-1.crt -text```
 
 ## Network Troubleshooting
 - Refer to the CNI Plugin: https://kubernetes.io/docs/concepts/cluster-administration/addons/#networking-and-network-policy
