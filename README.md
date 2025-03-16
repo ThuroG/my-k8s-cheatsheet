@@ -440,7 +440,8 @@ patches:
 - Refer to the CNI Plugin: https://kubernetes.io/docs/concepts/cluster-administration/addons/#networking-and-network-policy
 - Check the CoreDNS pods in kube-system (especially the config map from CoreDNS)
 Troubleshooting issues related to coreDNS
-- Here is the documentation of KodeKloud: ```
+- Here is the documentation of KodeKloud: 
+```
 1. If you find CoreDNS pods in a pending state first check that the network plugin is installed.
 
 2. coredns pods have CrashLoopBackOff or Error state
@@ -471,7 +472,7 @@ kubectl -n kube-system get ep kube-dns
 
 If there are no endpoints for the service, inspect the service and make sure it uses the correct selectors and ports.
 ```
-- Here is the KodeKloud documentation for KubeProxy Troubleshooting
+Here is the KodeKloud documentation for KubeProxy Troubleshooting
 ```
 Troubleshooting issues related to kube-proxy
 1. Check kube-proxy pod in the kube-system namespace is running.
@@ -484,6 +485,8 @@ Troubleshooting issues related to kube-proxy
 
 5. check kube-proxy is running inside the container
 
+```
+```
 netstat -plan | grep kube-proxy tcp 0 0 0.0.0.0:30081 0.0.0.0:* LISTEN 1/kube-proxy tcp 0 0 127.0.0.1:10249 0.0.0.0:* LISTEN 1/kube-proxy tcp 0 0 172.17.0.12:33706 172.17.0.12:6443 ESTABLISHED 1/kube-proxy tcp6 0 0 :::10256 :::* LISTEN 1/kube-proxy
 ```
 
