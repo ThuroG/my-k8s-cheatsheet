@@ -369,6 +369,44 @@ net-conf.json: |
 8.5 apply the modified manifest: ``` kubectl apply -f kube-flannel.yml ```
 8.6 Check the status of the both the nodes: ```kubectl get nodes```
 
+# JSON Path
+- Json path can be used with jpath
+- First element starts always with a '$'
+- Dictionaries are called by its name such as'$.cars'
+- Lists can be called with the array index '[]'
+-- Get the first element ```$[0]```
+-- Get the third element ```$[2]```
+-- Get the first and the third element ```$[0,2]```
+-- Get from the first up to the fourth element ```$[0:3]``` NOTE: if you want to include the fourth element you have to choose 4 as final digit
+-- Get every other item from first to the eight element ```$[0:8:2]```
+-- Get the last index from the list ```$[-1:0]``` NOTE: You can also use the second last index with ```$[-2:0]```
+- Conditions are introduced with a '?' and then each element is '@'
+- Wildcards is the astericks (*)
+
+## JSON Path in Kubernetes
+- Use JSON path to filter from 100 of pods and nodes
+- kubectl uses json path
+- How to JSON Path in Kubectl
+1. Identify the kubectl command such as ```kubectl get nodes -o json``` or ```kubectl get pods -o json```
+2. Familiaze with JSON Output
+3. Form the JSON Path query (NOTE: in k8s the '$' is not needed!!) --> example is ```.items[0].spec.containers[0].image```
+4. Use the JSON Path query with kubectl Cmd like here: ```kubectl get pods -o=jsonpath='{.items[0].spec.containers[0].image}'```
+- Examples of Json path commands by KodeKloud
+-- Get Node names: ```kubectl get nodes -o=jsonpath='{.items[*].metadata.name}'```
+-- Get Hardware architecture names: ```kubectl get nodes -o=jsonpath='{.items[*].status.nodeInfo.architecture}'```
+-- Get count of CPUs : ```kubectl get nodes -o=jsonpath='{.items[*].status.capacity.cpu}'```
+- You can combine two JSON Path commands by adding it at the and such as here: ```kubectl get nodes -o=jsonpath='{.items[*].metadata.name}{"\n"}{.items[*].status.nodeInfo.architecture}'```
+- NOTE: ```{"\n"}``` is used for new line while ```{"\t"}``` is used for tab
+- Use Loops to arange the table in a good format like here: ```
+'{range .items[*]}
+  {.metadata.name}{"\t"}{.status.capacity.cpu}{"\n"}
+{end}'
+```
+- use it in Kubectl like this: ```kubectl get nodes -o=jsonpath={range .items[*]}{.metadata.name}{"\t"}{.status.capacity.cpu}{"\n"}{end}'``` 
+- a better way is to use columns such as: ```kubectl get nodes -o=custom-columns=<COLUMN NAME>:<JSON PATH>```
+-- Example: ```kubectl get nodes -o=custom-columns=NODE:.metadata.name,CPU:.status.capacity.cpu```
+- Sort by with kubectl: ```kubectl get nodes --sort-by=.metadata.name```
+
 # Helm
 - Packaging Manager for Kubernetes: https://helm.sh/
 - Cheatsheet for Helm: https://helm.sh/docs/intro/cheatsheet/
