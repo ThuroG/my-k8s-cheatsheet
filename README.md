@@ -48,6 +48,7 @@ It is structured by the Certifications
 - Cat log from a running pod ```kubectl exec webapp -- cat /log/app.log```
 - ETCDCTL Version set default to 2. Use 3 ```export ETCDCTL_API=3```
 - Get all keys from ETCDCTL ```etcdctl get / --prefix --keys-only```
+Create a service automatically and expose the port: ```kubectl expose pod messaging --port=6379 --name messaging-service```
 
 # CKA Important Kubernetes Documentation links
 
@@ -412,6 +413,11 @@ net-conf.json: |
 - Cheatsheet for Helm: https://helm.sh/docs/intro/cheatsheet/
 - Public registry for Helm packages: https://artifacthub.io/
 - Helm uses releases so that you can manage it better. Check out ```helm list```
+- Check all available helm repository: ``` helm repo ls```
+- Update helm repository: ```helm repo update kk-mock1 -n kk-ns```
+- Search last 30 available helm charts from updated repository: ```helm search repo kk-mock1/nginx -n kk-ns -l | head -n30```
+- Upgrade helm chart with a specific version: ```helm upgrade kk-mock1 kk-mock1/nginx -n kk-ns --version=18.1.15```
+- Verify installed helm version: ```helm ls -n kk-ns```
 
 # Kustomize
 - Disclaimer: Kustomize has a very shitty documentation
