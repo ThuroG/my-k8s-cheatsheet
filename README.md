@@ -536,3 +536,56 @@ netstat -plan | grep kube-proxy tcp 0 0 0.0.0.0:30081 0.0.0.0:* LISTEN 1/kube-pr
 
 - Debug Service issues: https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service/
 - DNS Troubleshooting: https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
+
+
+# Killer Shell
+- Go inside a container and use shell commando: ```k -n project-swan exec api-contact -it -- sh```
+- Curl command for Kubernetes API to get all secrets with a token: ```curl -k https://kubernetes.default/api/v1/secrets -H "Authorization: Bearer ${TOKEN}"```
+- Secrets are under /var/run/secrets/kubernetes.io/serviceaccount and can be used as Token
+- ```
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: traffic-director
+  namespace: project-r500
+spec:
+  parentRefs:
+    - name: main
+  hostnames:
+    - "r500.gateway"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /desktop
+      backendRefs:
+        - name: web-desktop
+          port: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /mobile
+      backendRefs:
+        - name: web-mobile
+          port: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /auto
+          headers:
+          - type: Exact
+            name: user-agent
+            value: mobile
+      backendRefs:
+        - name: web-mobile
+          port: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /auto
+      backendRefs:
+        - name: web-desktop
+          port: 80
+```
+- Kubeadm Token creation to join a node to the controlplane by applying: ```kubeadm token create --print-join-command```
+
