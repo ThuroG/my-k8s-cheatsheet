@@ -448,6 +448,14 @@ patches:
 - Components: https://notes.kodekloud.com/docs/CKA-Certification-Course-Certified-Kubernetes-Administrator/2025-Updates-Kustomize-Basics/Components
 
 # Troubleshooting
+# IMPORTANT LINKS FOR TROUBLESHOOTING
+- Log locations to check:
+-- ```/var/log/pods```
+-- ```/var/log/containers```
+-- ```crictl ps + crictl logs```
+-- ```docker ps``` + ```docker logs``` (in case when Docker is used)
+-- kubelet logs: ```/var/log/syslog``` or ```journalctl```
+
 ## A. Application Failure
 - A.0 Check the official documentation of Troubleshooting Applications: https://kubernetes.io/docs/tasks/debug/debug-application/
 - A.1 Check all components where the failure may occur. Start with the end user perspective and troubleshoot with a curl cmd ```curl http://web-service-ip:node-port```
